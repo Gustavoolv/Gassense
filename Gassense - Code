@@ -1,0 +1,80 @@
+#include <LiquidCrystal.h>
+LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
+
+int gas;
+int verm=9;
+int amarelo=8;
+int verde=13;
+int alarme=10;
+
+void setup()
+
+{
+  lcd.begin(16,2);
+  
+  Serial.begin(9600); 
+  pinMode(verm,OUTPUT);
+  pinMode(amarelo,OUTPUT);
+  pinMode(verde,OUTPUT);
+  pinMode(alarme,OUTPUT);
+  
+}
+
+void loop()
+{
+  gas = analogRead(A5);
+  if (gas<930)
+
+  {
+    digitalWrite(verde,HIGH);
+    digitalWrite(amarelo,LOW);
+    digitalWrite(verm,LOW);
+
+    noTone(alarme);
+	lcd.clear();
+    lcd.println("Seguro");
+    lcd.setCursor(6,0);
+    lcd.println("          ");
+    delay(700);
+  }
+
+  
+
+  if ((gas>930) and (gas<960))
+
+  {
+    digitalWrite(verde,LOW);
+    digitalWrite(amarelo,HIGH);
+    digitalWrite(verm,LOW);
+
+    noTone(alarme);
+	lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.println("Atencao,possivel");
+	lcd.setCursor(0,1);
+    lcd.println("vazamento de gas  ");
+    delay(700);
+    
+  }
+
+   if (gas>960)
+  {
+    digitalWrite(verde,LOW);
+    digitalWrite(amarelo,LOW);
+    digitalWrite(verm,HIGH);
+    tone(alarme,440);
+    delay(500);
+    noTone(alarme);
+
+    delay(300);
+ 	lcd.clear();
+    lcd.print("Perigo,risco");
+    lcd.setCursor(0, 1);
+	lcd.println("de incendio !!");
+    lcd.setCursor(14,1);
+    lcd.println("  ");
+    delay(700);
+
+   }                                          
+
+}
